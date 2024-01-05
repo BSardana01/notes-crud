@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:1.25.3
+    build:
+      context: ./nginx
+    restart: always
+    ports:
+      - 3000:3000
+    depends_on:
+      - mern-backend
+
+  mern-backend:
+    environment:
+      - MONGO_CONNECTION_URI=${MONGO_CONNECTION_URI}
+      - JWT_SECRET=${JWT_SECRET}
+      - PORT=${PORT}
+    build:
+      context: ./backend
+    restart: on-failure
+    volumes:
+      - ./backend:/backend
